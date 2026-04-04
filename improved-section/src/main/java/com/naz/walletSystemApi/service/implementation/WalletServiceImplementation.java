@@ -9,6 +9,7 @@ import com.naz.walletSystemApi.repository.TransactionRepository;
 import com.naz.walletSystemApi.repository.WalletRepository;
 import com.naz.walletSystemApi.service.WalletService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class WalletServiceImplementation implements WalletService {
         return "Wallet created successfully";
     }
 
+    @Transactional
     public String fundWallet(UUID id, BigDecimal amount) {
         Wallet wallet = walletRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Wallet", "Id",id.toString()));
 
@@ -56,6 +58,7 @@ public class WalletServiceImplementation implements WalletService {
         return "Wallet funded successfully";
     }
 
+    @Transactional
     public String debitWallet(UUID id, BigDecimal amount) {
         Wallet wallet = walletRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Wallet", "Id",id.toString()));
