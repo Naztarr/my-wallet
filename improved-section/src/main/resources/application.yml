@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: walletSystemApi
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mywallet_db
+    username: postgres
+    password: idealnaz
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
