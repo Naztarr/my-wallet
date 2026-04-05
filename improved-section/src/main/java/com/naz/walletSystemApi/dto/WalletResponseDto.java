@@ -8,15 +8,15 @@ import java.util.UUID;
 
 public class WalletResponseDto {
     private UUID id;
-    private UUID userId;
+    private UserResponseDto user;
     private BigDecimal balance;
 
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(UserResponseDto user) {
+        this.user = user;
     }
 
     public void setBalance(BigDecimal balance) {

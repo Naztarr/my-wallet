@@ -2,10 +2,12 @@ package com.naz.walletSystemApi.service.implementation;
 
 import com.naz.walletSystemApi.dto.WalletResponseDto;
 import com.naz.walletSystemApi.entity.Transaction;
+import com.naz.walletSystemApi.entity.User;
 import com.naz.walletSystemApi.entity.Wallet;
 import com.naz.walletSystemApi.exception.ResourceNotFoundException;
 import com.naz.walletSystemApi.mapper.WalletMapper;
 import com.naz.walletSystemApi.repository.TransactionRepository;
+import com.naz.walletSystemApi.repository.UserRepository;
 import com.naz.walletSystemApi.repository.WalletRepository;
 import com.naz.walletSystemApi.service.WalletService;
 import org.springframework.stereotype.Service;
@@ -19,17 +21,21 @@ import java.util.UUID;
 public class WalletServiceImplementation implements WalletService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
 
-    public WalletServiceImplementation(WalletRepository walletRepository, TransactionRepository transactionRepository) {
+    public WalletServiceImplementation(WalletRepository walletRepository, TransactionRepository transactionRepository, UserRepository userRepository) {
         this.walletRepository = walletRepository;
         this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
     }
 
     // TODO: Refactor when User entity is added.
 // 1. remove the UUID parameter.
 // 2. extract the logged-in user from Security Context.
     public String createWallet(UUID userId) {
-        Wallet wallet = new Wallet(userId, BigDecimal.ZERO);
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new ResourceNotFoundException("user", "id", userId.toString()));
+        Wallet wallet = new Wallet(user, BigDecimal.ZERO);
         walletRepository.save(wallet);
 
         return "Wallet created successfully";
@@ -37,7 +43,8 @@ public class WalletServiceImplementation implements WalletService {
 
     @Transactional
     public String fundWallet(UUID id, BigDecimal amount) {
-        Wallet wallet = walletRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Wallet", "Id",id.toString()));
+        Wallet wallet = walletRepository.findById(id).orElseThrow( ()
+                -> new ResourceNotFoundException("Wallet", "Id",id.toString()));
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero");

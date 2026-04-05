@@ -1,24 +1,30 @@
 package com.naz.walletSystemApi.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
+    @Column(name = "wallet_id")
     private UUID walletId;
+    @Column(name = "transaction_type")
     private String type; // "CREDIT" or "DEBIT"
+    @Column(name = "transaction_amount")
     private BigDecimal amount;
+    @CreationTimestamp
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime timestamp;
 
     public Transaction(UUID walletId, String type, BigDecimal amount, LocalDateTime timestamp) {

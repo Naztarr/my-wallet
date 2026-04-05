@@ -9,17 +9,21 @@ import java.util.UUID;
 
 
 @Entity
+@Table(name = "wallets")
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
-    @Column(nullable = false, unique = true)
-    private UUID userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "fk_wallet_user"))
+    private User user;
+    @Column(name = "wallet_balance")
     private BigDecimal balance;
 
-    public Wallet(UUID userId, BigDecimal balance) {
-        this.userId = userId;
+    public Wallet(User user, BigDecimal balance) {
+        this.user = user;
         this.balance = balance;
     }
     public Wallet(){}
@@ -28,8 +32,8 @@ public class Wallet {
         return id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public BigDecimal getBalance() {
@@ -37,8 +41,8 @@ public class Wallet {
     }
 
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setBalance(BigDecimal balance) {

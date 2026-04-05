@@ -1,5 +1,6 @@
 package com.naz.walletSystemApi.mapper;
 
+import com.naz.walletSystemApi.dto.UserResponseDto;
 import com.naz.walletSystemApi.dto.WalletResponseDto;
 import com.naz.walletSystemApi.entity.Wallet;
 import lombok.Data;
@@ -10,7 +11,8 @@ public class WalletMapper {
         if (wallet == null) return null;
         WalletResponseDto walletDto = new WalletResponseDto();
         walletDto.setId(wallet.getId());
-        walletDto.setUserId(wallet.getUserId());
+        walletDto.setUser(new UserResponseDto(wallet.getUser().getFirstName(),
+                wallet.getUser().getLastName(), wallet.getUser().getEmail()));
         walletDto.setBalance(wallet.getBalance());
         return walletDto;
     }
